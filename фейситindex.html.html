@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VACEIT — Игровая платформа для соревновательной игры</title>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0c12;
+            color: #eef2ff;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141822;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff4d4d;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========== НАВИГАЦИЯ (с активными вкладками) ========== */
+        .navbar {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFFFFF 20%, #ff5c5c 90%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo i {
+            background: none;
+            -webkit-background-clip: unset;
+            color: #ff4d4d;
+            font-size: 32px;
+            background: linear-gradient(145deg, #ff7a4d, #ff2b2b);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            color: #cdd9ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active {
+            color: #ff5a5a;
+            border-bottom-color: #ff5a5a;
+        }
+        .nav-link:hover {
+            color: #ff5a5a;
+        }
+        .btn-outline-light {
+            border: 1.5px solid #ff5a5a;
+            background: transparent;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #ff5a5a;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-outline-light:hover {
+            background: #ff5a5a20;
+        }
+
+        /* ========== ОСНОВНОЙ КОНТЕНТ (вкладки) ========== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active-tab {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Hero общий стиль для главной */
+        .hero {
+            padding: 64px 0 70px;
+        }
+        .hero-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 48px;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hero-content {
+            flex: 1.2;
+            min-width: 280px;
+        }
+        .hero-badge {
+            background: rgba(255, 77, 77, 0.2);
+            backdrop-filter: blur(4px);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ff8a6e;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #FFFFFF 70%, #ffb57c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 24px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: #b9c3e6;
+            max-width: 550px;
+            margin-bottom: 40px;
+        }
+        .cta-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: #ff4d4d;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(255, 77, 77, 0.3);
+        }
+        .stats-cards {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: flex-end;
+        }
+        .stat-card {
+            background: rgba(20, 24, 34, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 28px;
+            min-width: 170px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .stat-number {
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(145deg, #FFE6A3, #ff7a5c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* ИГРЫ */
+        .games-section {
+            padding: 40px 0 70px;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .games-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .game-card {
+            background: #11141f;
+            border-radius: 28px;
+            padding: 28px 20px;
+            text-align: center;
+            width: 200px;
+            transition: 0.25s;
+            border: 1px solid rgba(255,70,70,0.1);
+            cursor: pointer;
+        }
+        .game-card:hover {
+            transform: translateY(-6px);
+            border-color: #ff5a5a;
+        }
+        .game-icon {
+            font-size: 54px;
+            margin-bottom: 20px;
+            color: #ff6b5c;
+        }
+        .game-name {
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+        .game-status {
+            font-size: 0.75rem;
+            color: #6cff9e;
+            margin-top: 12px;
+        }
+
+        /* Турнирные блоки (две подвкладки) */
+        .tournament-subtabs {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #2a2f42;
+            padding-bottom: 10px;
+        }
+        .subtab-btn {
+            background: none;
+            border: none;
+            color: #b9c5ea;
+            font-weight: 700;
+            font-size: 1.2rem;
+            padding: 12px 28px;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: 0.2s;
+        }
+        .subtab-btn.active-sub {
+            background: #ff4d4d20;
+            color: #ff7a5a;
+            border-bottom: 2px solid #ff5a5a;
+        }
+        .tournament-panel {
+            display: none;
+            background: #0e111b;
+            border-radius: 32px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+        .tournament-panel.active-panel {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1a1e2c;
+            border: 1px solid #2f354b;
+            border-radius: 48px;
+            color: white;
+            font-size: 1rem;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff5a5a;
+        }
+        .team-code-area {
+            text-align: center;
+        }
+
+        /* Сообщество - ссылка */
+        .community-link-block {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(145deg, #0f1220, #080b14);
+            border-radius: 56px;
+            margin: 40px 0;
+        }
+        .community-link-block a {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ff7a5a;
+            text-decoration: none;
+            background: rgba(255,90,90,0.15);
+            padding: 20px 50px;
+            border-radius: 90px;
+            display: inline-block;
+            transition: 0.2s;
+        }
+        .community-link-block a:hover {
+            background: #ff4d4d;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .footer {
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid #1f2538;
+            color: #6f7a9e;
+        }
+        @media (max-width: 800px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats-cards { justify-content: center; margin-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- НАВИГАЦИЯ с вкладками (убрали центр наград) -->
+    <div class="navbar">
+        <div class="logo">
+            <i class="fab fa-facebook-f"></i>
+            <span>VACEIT</span>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link active" data-tab="home">Главная</a>
+            <a class="nav-link" data-tab="games">Игры</a>
+            <a class="nav-link" data-tab="tournaments">Турниры</a>
+            <a class="nav-link" data-tab="community">Сообщество</a>
+            <button class="btn-outline-light"><i class="fas fa-user-plus"></i> Войти</button>
+        </div>
+    </div>
+
+    <!-- ========== ВКЛАДКА ГЛАВНАЯ ========== -->
+    <div id="homeTab" class="tab-content active-tab">
+        <div class="hero">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge"><i class="fas fa-fire"></i> Season 8 is live</div>
+                    <h1>Испытайте себя!</h1>
+                    <p>Улучшайте уровень игры, выигрывайте реальные призы и становитесь частью сообщества из более чем 34 миллионов серьезных игроков.</p>
+                    <div class="cta-group">
+                        <button class="btn-primary" id="playNowMainBtn"><i class="fab fa-steam"></i> Играть бесплатно</button>
+                        <button class="btn-secondary" style="background:transparent; border:1px solid #5c6f9e; padding:14px 36px; border-radius:48px; font-weight:600;">Турниры</button>
+                    </div>
+                </div>
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-number"><span id="onlinePlayers">248,339</span></div>
+                        <div class="stat-label"><i class="fas fa-users"></i> Игроки онлайн</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><span id="liveMatches">10,199</span></div>
+                        <div class="stat-label"><i class="fas fa-tv"></i> Прямые трансляции</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><span id="totalPrizes">$10 млн</span><span style="font-size:1rem;">+</span></div>
+                        <div class="stat-label"><i class="fas fa-medal"></i> Награды всего</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- блок популярных игр превью -->
+        <div style="text-align:center; margin: 20px 0 40px;"><span style="background:#ff4d4d20; padding:6px 18px; border-radius:30px;">🔥 Популярные дисциплины</span></div>
+    </div>
+
+    <!-- ========== ВКЛАДКА ИГРЫ (CS2, DOTA2, STANDOFF2 и другие) ========== -->
+    <div id="gamesTab" class="tab-content">
+        <div class="games-section">
+            <div class="section-title">🎮 Выбери свою игру</div>
+            <div class="games-grid" id="gamesDynamicGrid"></div>
+            <div style="margin-top: 30px; text-align: center; color:#8e9bc2;">*Особый режим матчмейкинга для CS2, DOTA2 и STANDOFF2</div>
+        </div>
+    </div>
+
+    <!-- ========== ВКЛАДКА ТУРНИРЫ (с двумя подвкладками) ========== -->
+    <div id="tournamentsTab" class="tab-content">
+        <div style="padding: 40px 0 60px;">
+            <div class="section-title">🏆 Турниры VACEIT</div>
+            <div class="tournament-subtabs">
+                <button class="subtab-btn active-sub" data-sub="register">📝 Зарегистрироваться на турнир</button>
+                <button class="subtab-btn" data-sub="join">🤝 Вступить в команду по коду</button>
+            </div>
+            <!-- панель 1: регистрация -->
+            <div id="registerPanel" class="tournament-panel active-panel">
+                <h3 style="margin-bottom: 24px; text-align:center;">Регистрация на открытый турнир</h3>
+                <form id="tournamentForm">
+                    <div class="form-group"><input type="text" placeholder="Имя игрока (никнейм)" required></div>
+                    <div class="form-group"><input type="email" placeholder="Email для уведомлений" required></div>
+                    <div class="form-group"><input type="text" placeholder="Выберите игру: CS2 / DOTA2 / STANDOFF2" required></div>
+                    <div style="text-align:center;"><button type="submit" class="btn-primary" style="padding:12px 48px;">Зарегистрироваться</button></div>
+                </form>
+                <p style="margin-top: 28px; text-align:center; font-size:0.8rem;">После регистрации вы получите код команды на почту.</p>
+            </div>
+            <!-- панель 2: вступить в команду по коду -->
+            <div id="joinPanel" class="tournament-panel">
+                <h3 style="margin-bottom: 24px; text-align:center;">Вступление в команду по коду</h3>
+                <div class="team-code-area">
+                    <div class="form-group"><input type="text" id="teamCodeInput" placeholder="Введите код команды (например, VCT2025-8X9K)" style="text-align:center;"></div>
+                    <button id="joinTeamBtn" class="btn-primary" style="padding:12px 40px;">Присоединиться</button>
+                    <p id="joinMessage" style="margin-top: 20px; color:#aaa;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ВКЛАДКА СООБЩЕСТВО (ссылка на https://www.faceit.com/ru) ========== -->
+    <div id="communityTab" class="tab-content">
+        <div class="community-link-block">
+            <i class="fas fa-users fa-3x" style="color:#ff7a5a; margin-bottom: 24px; display:block;"></i>
+            <h2>FACEIT Community Hub</h2>
+            <p style="margin: 20px 0; color:#b9c3e6;">Присоединяйся к крупнейшему соревновательному сообществу</p>
+            <a href="https://www.faceit.com/ru" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-facebook-f"></i> Перейти на официальный FACEIT <i class="fas fa-external-link-alt"></i>
+            </a>
+            <p style="margin-top: 30px; font-size:0.85rem;">Обсуждай матчи, находи тиммейтов и смотри турниры</p>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <p>© 2025 VACEIT — Вдохновлено платформой для серьезных киберспортсменов. <i class="fas fa-heart" style="color:#ff4d4d;"></i> Играй и побеждай.</p>
+    </div>
+</div>
+
+<script>
+    // ========== ПЕРЕКЛЮЧЕНИЕ ГЛАВНЫХ ВКЛАДОК ==========
+    const tabs = document.querySelectorAll('.nav-link');
+    const contents = {
+        home: document.getElementById('homeTab'),
+        games: document.getElementById('gamesTab'),
+        tournaments: document.getElementById('tournamentsTab'),
+        community: document.getElementById('communityTab')
+    };
+    
+    function activateTab(tabId) {
+        Object.keys(contents).forEach(key => {
+            contents[key].classList.remove('active-tab');
+        });
+        if(contents[tabId]) contents[tabId].classList.add('active-tab');
+        tabs.forEach(tab => {
+            if(tab.getAttribute('data-tab') === tabId) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+    }
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            const tabName = tab.getAttribute('data-tab');
+            if(tabName) activateTab(tabName);
+        });
+    });
+    
+    // ========== ДИНАМИЧЕСКИЙ СПИСОК ИГР (CS2, DOTA2, STANDOFF2 и дополнительные) ==========
+    const gameList = [
+        { name: "CS2", icon: "fas fa-bullseye", desc: "Классический шутер", special: true },
+        { name: "DOTA2", icon: "fas fa-dragon", desc: "MOBA стратегия", special: true },
+        { name: "STANDOFF2", icon: "fas fa-mobile-alt", desc: "Мобильный киберспорт", special: true },
+        { name: "Valorant", icon: "fas fa-crosshairs", desc: "Тактический рай", special: false },
+        { name: "Overwatch 2", icon: "fas fa-bolt", desc: "Геройский шутер", special: false },
+        { name: "Rocket League", icon: "fas fa-futbol", desc: "Футбол на машинах", special: false }
+    ];
+    
+    const gamesGrid = document.getElementById('gamesDynamicGrid');
+    if(gamesGrid) {
+        gameList.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.innerHTML = `
+                <div class="game-icon"><i class="${game.icon}"></i></div>
+                <div class="game-name">${game.name}</div>
+                <div class="game-status">${game.special ? '🔥 Активный матчмейкинг' : 'Доступно'}</div>
+                <div style="font-size:12px; margin-top:12px;">${game.desc}</div>
+            `;
+            // клик по игре - уведомление
+            card.addEventListener('click', () => {
+                alert(`Вы выбрали ${game.name}. Скоро здесь появится лобби VACEIT!`);
+            });
+            gamesGrid.appendChild(card);
+        });
+    }
+    
+    // ========== ПОДВКЛАДКИ ТУРНИРОВ ==========
+    const subBtns = document.querySelectorAll('.subtab-btn');
+    const registerPanel = document.getElementById('registerPanel');
+    const joinPanel = document.getElementById('joinPanel');
+    
+    function setTournamentPanel(panelName) {
+        if(panelName === 'register') {
+            registerPanel.classList.add('active-panel');
+            joinPanel.classList.remove('active-panel');
+            subBtns.forEach(btn => {
+                if(btn.getAttribute('data-sub') === 'register') btn.classList.add('active-sub');
+                else btn.classList.remove('active-sub');
+            });
+        } else {
+            joinPanel.classList.add('active-panel');
+            registerPanel.classList.remove('active-panel');
+            subBtns.forEach(btn => {
+                if(btn.getAttribute('data-sub') === 'join') btn.classList.add('active-sub');
+                else btn.classList.remove('active-sub');
+            });
+        }
+    }
+    
+    subBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const sub = btn.getAttribute('data-sub');
+            setTournamentPanel(sub);
+        });
+    });
+    
+    // Форма регистрации на турнир
+    const tournamentForm = document.getElementById('tournamentForm');
+    if(tournamentForm) {
+        tournamentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✅ Вы успешно зарегистрированы на турнир! Проверьте почту для получения кода команды.');
+            tournamentForm.reset();
+        });
+    }
+    
+    // Вступление в команду по коду
+    const joinTeamBtn = document.getElementById('joinTeamBtn');
+    const teamCodeInput = document.getElementById('teamCodeInput');
+    const joinMessage = document.getElementById('joinMessage');
+    if(joinTeamBtn) {
+        joinTeamBtn.addEventListener('click', () => {
+            const code = teamCodeInput.value.trim();
+            if(code === "") {
+                joinMessage.innerText = "❌ Введите код команды!";
+                joinMessage.style.color = "#ff8a6e";
+            } else {
+                joinMessage.innerHTML = `✅ Вы вступили в команду по коду "${code}". Ожидайте приглашение в лобби.`;
+                joinMessage.style.color = "#6cff9e";
+                teamCodeInput.value = "";
+            }
+        });
+    }
+    
+    // ========== ЖИВАЯ СТАТИСТИКА (анимация) ==========
+    function animateValue(element, start, end, suffix = '', isMoney = false) {
+        if(!element) return;
+        let range = end - start;
+        let current = start;
+        const steps = 35;
+        let step = range / steps;
+        let interval = setInterval(() => {
+            current += step;
+            if ((step > 0 && current >= end) || (step < 0 && current <= end)) {
+                current = end;
+                clearInterval(interval);
+            }
+            let val = Math.floor(current);
+            if(isMoney) element.innerText = '$' + val + 'M+';
+            else element.innerText = val.toLocaleString();
+        }, 20);
+    }
+    
+    let onlineVal = 248339;
+    let matchesVal = 10199;
+    let prizeVal = 10;
+    const onlineSpan = document.getElementById('onlinePlayers');
+    const matchesSpan = document.getElementById('liveMatches');
+    const prizeSpan = document.getElementById('totalPrizes');
+    
+    function refreshStats() {
+        let newOnline = onlineVal + Math.floor(Math.random() * 800) - 200;
+        if(newOnline < 210000) newOnline = 212000;
+        if(newOnline > 330000) newOnline = 330000;
+        let newMatches = matchesVal + Math.floor(Math.random() * 150) - 60;
+        if(newMatches < 9000) newMatches = 9100;
+        if(newMatches > 14500) newMatches = 14500;
+        let newPrize = prizeVal + (Math.random() * 0.2 - 0.03);
+        if(newPrize < 10) newPrize = 10;
+        if(newPrize > 14.5) newPrize = 14.5;
+        
+        animateValue(onlineSpan, onlineVal, newOnline, '');
+        animateValue(matchesSpan, matchesVal, newMatches, '');
+        // prize особый показ
+        let prizeSteps = 25;
+        let stepPrize = (newPrize - prizeVal) / prizeSteps;
+        let currP = prizeVal;
+        let count = 0;
+        let prizeInterval = setInterval(() => {
+            currP += stepPrize;
+            count++;
+            if(count >= prizeSteps) { currP = newPrize; clearInterval(prizeInterval); }
+            prizeSpan.innerText = '$' + currP.toFixed(1) + 'M+';
+        }, 25);
+        
+        onlineVal = newOnline;
+        matchesVal = newMatches;
+        prizeVal = newPrize;
+    }
+    setInterval(refreshStats, 10000);
+    setTimeout(refreshStats, 2000);
+    
+    // Играть бесплатно на главной
+    const playBtnMain = document.getElementById('playNowMainBtn');
+    if(playBtnMain) {
+        playBtnMain.addEventListener('click', () => {
+            alert('🚀 VACEIT лаунчер в разработке! Присоединяйся к миллионам на официальной платформе.');
+        });
+    }
+    
+    // Также добавим кнопке "Турниры" на главной переход на вкладку турниров
+    const secondaryTourneyBtn = document.querySelector('.hero .btn-secondary');
+    if(secondaryTourneyBtn) {
+        secondaryTourneyBtn.addEventListener('click', () => {
+            activateTab('tournaments');
+        });
+    }
+    
+    // инициализация подвкладок турниров
+    setTournamentPanel('register');
+    
+    // эффект hover для карточек статистики
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-4px)');
+        card.addEventListener('mouseleave', () => card.style.transform = 'translateY(0px)');
+    });
+    
+    // корректный заголовок VACEIT уже установлен.
+    console.log("VACEIT — все вкладки работают: Игры (CS2, DOTA2, STANDOFF2), Турниры (две подвкладки) и Сообщество -> faceit.com/ru");
+</script>
+</body>
+</html>
